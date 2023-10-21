@@ -31,7 +31,7 @@ while not robot_scripts:
     robot_scripts = [read_file(s.strip()) for s in robot_script_names]
 
 with args.config as f:
-    config = yaml.load(f)
+    config = yaml.load(f, Loader=yaml.FullLoader)
 
 sim = Simulator(config, background=False)
 

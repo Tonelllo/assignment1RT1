@@ -67,13 +67,13 @@ def draw_corner_zones(arena, display, surface, shape='Triangular'):
 
     def scoring_zone(corner_pos, colour, shape):
         x, y = corner_pos
-        if shape is 'Triangular':
+        if shape == 'Triangular':
             length = arena.scoring_zone_side
             a = get_coord(towards_zero(x, length), y)
             b = get_coord(x, towards_zero(y, length))
             c = get_coord(x, y)
             pygame.draw.polygon(surface, colour, (a, b, c), 0)
-        elif shape is 'Square':
+        elif shape == 'Square':
             length = arena.starting_zone_side
             a = get_coord(towards_zero(x, length), y)
             b = get_coord(x, y)
