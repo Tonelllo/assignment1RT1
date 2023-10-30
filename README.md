@@ -50,13 +50,13 @@ tokens that have already been set.
 
 An element which is missing from the script is object avoidance. With this I
 mean that if presented with this situation:
-![img](./img/caseBase.png)
+![caseBase](./img/caseBase.png?raw=true)
 The robot would not be able to see the object in front because no logic for it
 was developed. The end result would be:
-![img](./img/caseError.png)
+![caseError](./img/caseError.png?raw=true)
 Now it could be said that a simple solution would have been to make the robot
 turn $90^{\circ}$ degrees to th
-![img](./img/caseSol.png)
+![caseSol](./img/caseSol.png?raw=true)
 
 
 <a id="orgf084057"></a>
