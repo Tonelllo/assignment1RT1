@@ -23,7 +23,7 @@
 ## How to run code
 
 To run this code python3 is needed because it was developed starting from the
-assignment23<sub>python3</sub> branch of [@CarmineD8](https://github.com/CarmineD8) [python<sub>simulator</sub>](https://github.com/CarmineD8/python_simulator/) github repo:
+assignment23<sub>python3</sub> branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) github repo:
 <https://github.com/CarmineD8/python_simulator/tree/assignment23_python3>
 
     python3 run.py assignment.py
