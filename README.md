@@ -1,94 +1,129 @@
-Python Robotics Simulator
-================================
 
-This is a simple, portable robot simulator developed by [Student Robotics](https://studentrobotics.org).
-Some of the arenas and the exercises have been modified for the Research Track I course
+# Table of Contents
 
-Installing and running
-----------------------
+1.  [Research Track Assignment 1](#org9af548e)
+    1.  [How to run code](#org96ded60)
+    2.  [What does this code do?](#org0bcb10e)
+        1.  [Objective](#org91fb8d9)
+    3.  [Solution implemented](#org70d2e24)
+        1.  [Possible improvements](#org33e7206)
+        2.  [Why they have not been implemented](#org708196b)
+    4.  [Pseudocode](#org4cac8fe)
+    5.  [Improvements](#org2b72698)
 
-Please follow the instructions provided in the slides. 
 
-## Exercise
------------------------------
 
-To run one or more scripts in the simulator, use `run.py`, passing it the file names. 
+<a id="org9af548e"></a>
 
-I am proposing you three exercises, with an increasing level of difficulty.
-The instruction for the three exercises can be found inside the .py files (exercise1.py, exercise2.py, exercise3.py).
+# Research Track Assignment 1
 
-When done, you can run the program with:
 
-```bash
-$ python run.py exercise1.py
+<a id="org96ded60"></a>
+
+## How to run code
+
+To run this code python3 is needed because it was developed starting from the
+assignment23<sub>python3</sub> branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) github repo:
+<https://github.com/CarmineD8/python_simulator/tree/assignment23_python3>
+
+    python3 run.py assignment.py
+
+
+<a id="org0bcb10e"></a>
+
+## What does this code do?
+
+The code contained in this repo was written for the first assignment of the
+course Research Track 1 of University of Genova.
+
+
+<a id="org91fb8d9"></a>
+
+### Objective
+
+The objective was to develop a python script able to control the turtle-bot in
+such a way that the robot could be able to stack all the golden tokens close to
+each other
+
+
+<a id="org70d2e24"></a>
+
+## Solution implemented
+
+The general idea behind the script is to immediately select an anchor token to
+which bring all the other tokens. In the script there is also a logic to face the
+edge case when the anchor is not seen by the robot because hidden by other
+tokens that have already been set.
+
+
+<a id="org33e7206"></a>
+
+### Possible improvements
+
+An element which is missing from the script is object avoidance. With this I
+mean that if presented with this situation:
+![baseCase](./img/caseBase.png?raw=true)
+The robot would not be able to see the object in front because no logic for it
+was developed. The end result would be:
+![errorCase](./img/caseError.png?raw=true)
+
+
+<a id="org708196b"></a>
+
+### Why they have not been implemented
+
+Now it could be said that a simple solution would have been to make the robot
+turn $90^{\circ}$ degrees to the left for example. This would have been only a
+partial solution because for example in the following situation the robot would
+run into a wall forever finding in front of itself always a extraneous token.
+The same goes for implementing a rotation to the right.
+![solCase](./img/caseSol.png?raw=true)
+No simple solution to this problem with the data available has been found so
+instead of producing a partial solution that would have worked only for
+particular cases the problem has been ignored seeing that in the proposed
+simulation this kind of situation do not occur.
+
+
+<a id="org4cac8fe"></a>
+
+## Pseudocode
+```
+    function take_token(id)
+        while true do
+            drive_towards_token(id);
+            if token_close_enough() then
+                R.grab()
+                return
+            end
+        end
+    end
+    
+    function go_to_anchor()
+        while true do
+            drive_towards_anchor()
+            if anchor_close_enough() then
+                R.grab()
+                return
+            end
+            if anchor_not_visible() then
+                go_towards_an_already_set_token()
+            end
+        end
+    end
+    
+    anchor = set_anchor()
+    while True do
+        take_token()
+        go_to_anchor()
+        if finished then
+            exit(0)
+        end
+    end
 ```
 
-You have also the solutions of the exercises (folder solutions)
+<a id="org2b72698"></a>
 
-```bash
-$ python run.py solutions/exercise1_solution.py
-```
+## Improvements
 
-Robot API
----------
+A possible improvement would be adding logic for object avoidance
 
-The API for controlling a simulated robot is designed to be as similar as possible to the [SR API][sr-api].
-
-### Motors ###
-
-The simulated robot has two motors configured for skid steering, connected to a two-output [Motor Board](https://studentrobotics.org/docs/kit/motor_board). The left motor is connected to output `0` and the right motor to output `1`.
-
-The Motor Board API is identical to [that of the SR API](https://studentrobotics.org/docs/programming/sr/motors/), except that motor boards cannot be addressed by serial number. So, to turn on the spot at one quarter of full power, one might write the following:
-
-```python
-R.motors[0].m0.power = 25
-R.motors[0].m1.power = -25
-```
-
-### The Grabber ###
-
-The robot is equipped with a grabber, capable of picking up a token which is in front of the robot and within 0.4 metres of the robot's centre. To pick up a token, call the `R.grab` method:
-
-```python
-success = R.grab()
-```
-
-The `R.grab` function returns `True` if a token was successfully picked up, or `False` otherwise. If the robot is already holding a token, it will throw an `AlreadyHoldingSomethingException`.
-
-To drop the token, call the `R.release` method.
-
-Cable-tie flails are not implemented.
-
-### Vision ###
-
-To help the robot find tokens and navigate, each token has markers stuck to it, as does each wall. The `R.see` method returns a list of all the markers the robot can see, as `Marker` objects. The robot can only see markers which it is facing towards.
-
-Each `Marker` object has the following attributes:
-
-* `info`: a `MarkerInfo` object describing the marker itself. Has the following attributes:
-  * `code`: the numeric code of the marker.
-  * `marker_type`: the type of object the marker is attached to (either `MARKER_TOKEN_GOLD`, `MARKER_TOKEN_SILVER` or `MARKER_ARENA`).
-  * `offset`: offset of the numeric code of the marker from the lowest numbered marker of its type. For example, token number 3 has the code 43, but offset 3.
-  * `size`: the size that the marker would be in the real game, for compatibility with the SR API.
-* `centre`: the location of the marker in polar coordinates, as a `PolarCoord` object. Has the following attributes:
-  * `length`: the distance from the centre of the robot to the object (in metres).
-  * `rot_y`: rotation about the Y axis in degrees.
-* `dist`: an alias for `centre.length`
-* `res`: the value of the `res` parameter of `R.see`, for compatibility with the SR API.
-* `rot_y`: an alias for `centre.rot_y`
-* `timestamp`: the time at which the marker was seen (when `R.see` was called).
-
-For example, the following code lists all of the markers the robot can see:
-
-```python
-markers = R.see()
-print "I can see", len(markers), "markers:"
-
-for m in markers:
-    if m.info.marker_type in (MARKER_TOKEN_GOLD, MARKER_TOKEN_SILVER):
-        print " - Token {0} is {1} metres away".format( m.info.offset, m.dist )
-    elif m.info.marker_type == MARKER_ARENA:
-        print " - Arena marker {0} is {1} metres away".format( m.info.offset, m.dist )
-```
-
-[sr-api]: https://studentrobotics.org/docs/programming/sr/
