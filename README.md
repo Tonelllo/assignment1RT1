@@ -16,7 +16,7 @@
 # Research Track Assignment 1
 
 
-## How to run code
+## How to run the code
 
 To run this code python3 is needed because it was developed starting from the
 assignment23_python3 branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) github repo:
@@ -55,9 +55,6 @@ mean that if presented with this situation:
 The robot would not be able to see the object in front because no logic for it
 was developed. The end result would be:
 ![caseError](./img/caseError.png?raw=true)
-Now it could be said that a simple solution would have been to make the robot
-turn $90^{\circ}$ degrees to th
-![caseSol](./img/caseSol.png?raw=true)
 
 
 ### Why they have not been implemented
