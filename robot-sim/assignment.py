@@ -151,6 +151,40 @@ def retrieve_stack_pos(object_seen):
             if token.info.code == object_seen:
                 return (token.rot_y, token.dist)
 
+# TODO take into account the position of the object relative to the robot
+
+
+def object_avoidance(target, target_distance):
+    """
+    Function that enables the turtle to avoid a token that is
+    between the robot and it's target.
+    The target can be both the anchor or a token
+
+    Args:
+      - target (int): the id of the target token
+      - target_distance (float): the distance of the target
+    """
+    for tokens in R.see():
+        if (tokens.info.code != target and
+                tokens.info.code != R.currently_held and
+                tokens.dist <= target_distance and
+                abs(tokens.rot_y) <= R.a_th+30 and
+                tokens.dist <= R.d_th + 1):
+
+            # Trying to avoid the token
+            turn(30, 0.7)
+            drive(50, 1)
+            turn(-30, 0.7)
+
+            """
+            If by moving the turtle the target dissappeared try to
+            search for it
+            """
+            while (sum(t.info.code == target for t in R.see()) == 0):
+                turn(-R.turn_speed, R.turn_interval)
+            return True
+        return False
+
 
 def move_robot_to(target):
     """
@@ -161,7 +195,6 @@ def move_robot_to(target):
       - target (int): the id of the token
     """
     done = False
-    global currently_held
     while not done:
         (rot, dist) = retrieve_stack_pos(target)
         if DEBUG_INFO:
@@ -177,7 +210,8 @@ def move_robot_to(target):
         elif rot < -R.a_th:
             turn(-R.turn_speed, R.turn_interval)
         elif dist >= R.d_th:
-            drive(speed_regulator(dist), R.drive_interval)
+            if not object_avoidance(target, dist):
+                drive(speed_regulator(dist), R.drive_interval)
 
         """
         If the target of this function is the anchor then
@@ -200,16 +234,16 @@ def move_robot_to(target):
                 R.release()
                 # Adds to the tokens positioned successfully
                 # the last held token id
-                R.tokens_set.append(currently_held)
+                R.tokens_set.append(R.currently_held)
                 # Having released the token now the gripper is empty
-                currently_held = -1
+                R.currently_held = -1
                 done = True
                 break
             else:
                 print(SUCC+"Token reached successfully, grabbing it")
                 R.grab()
                 # Set currently held token id
-                currently_held = target
+                R.currently_held = target
                 done = True
                 break
 
