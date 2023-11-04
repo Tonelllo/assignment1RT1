@@ -16,6 +16,10 @@ R.turn_interval = 0.1
 R.drive_interval = 0.1
 R.search_speed = 50
 R.search_interval = 0.1
+# This is not the best solution but is better than having a
+# global variable before the functions that use this parameter
+R.print_once_speed = True
+R.print_once_anchor_warn = True
 
 # Color constants
 # pure debugging
@@ -81,12 +85,7 @@ def set_anchor():
             return anchor
 
 
-# TODO maybe remove
-print_speed_once = True
-
-
 def speed_regulator(dist):
-    global print_speed_once
     """
     Function to reduce speed when near the targets
 
@@ -98,21 +97,16 @@ def speed_regulator(dist):
       - an appropriate drive speed (float)
     """
     if dist < 1:
-        if print_speed_once:
-            print_speed_once = False
+        if R.print_once_speed:
+            R.print_once_speed = False
             print(INFO+"Moderating speed for beeing near to target")
         return R.drive_speed/2
     else:
-        print_speed_once = True
+        R.print_once_speed = True
         return R.drive_speed
 
 
-# TODO maybe remove
-print_once = True
-
-
 def retrieve_stack_pos(object_seen):
-    global print_once
     """
     Function that allows the turtle to position the token
     next to the anchor if the anchor becomes no more visible
@@ -128,7 +122,7 @@ def retrieve_stack_pos(object_seen):
         # try if is not obstructed by other objects
         for token in R.see():
             if token.info.code == R.anchor:
-                print_once = True
+                R.print_once_anchor_warn = True
                 return (token.rot_y, token.dist)
 
         """
@@ -137,11 +131,11 @@ def retrieve_stack_pos(object_seen):
         The best way to address the issue is to go towards
         a token that is already set
         """
-        if print_once:
+        if R.print_once_anchor_warn:
             print(WARN+"The anchor could not be found "
                   "because hidden by other tokens")
             print(WARN+"Proceding towards one token already set")
-            print_once = False
+            R.print_once_anchor_warn = False
 
         for token in R.see():
             if token.info.code in R.tokens_set:
@@ -161,7 +155,6 @@ def move_robot_to(target):
       - target (int): the id of the token
     """
     done = False
-    global currently_held
     while not done:
         (rot, dist) = retrieve_stack_pos(target)
         if DEBUG_INFO:
@@ -200,16 +193,16 @@ def move_robot_to(target):
                 R.release()
                 # Adds to the tokens positioned successfully
                 # the last held token id
-                R.tokens_set.append(currently_held)
+                R.tokens_set.append(R.currently_held)
                 # Having released the token now the gripper is empty
-                currently_held = -1
+                R.currently_held = -1
                 done = True
                 break
             else:
                 print(SUCC+"Token reached successfully, grabbing it")
                 R.grab()
                 # Set currently held token id
-                currently_held = target
+                R.currently_held = target
                 done = True
                 break
 
@@ -261,7 +254,6 @@ def main():
         """
         if (len(R.tokens_set) == 5):
             print(COMP+"Task completed!")
-            turn(100, 1)
             exit(0)
 
 
