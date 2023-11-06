@@ -91,6 +91,9 @@ simulation this kind of situation do not occur.
     function take_token(id)
         while true do
             drive_towards_token(id);
+            if anchor_in path() then
+                try_to_avoid()
+            end
             if token_close_enough() then
                 R.grab()
                 return
@@ -101,6 +104,9 @@ simulation this kind of situation do not occur.
     function go_to_anchor()
         while true do
             drive_towards_anchor()
+            if token_in path() then
+                try_to_avoid()
+            end
             if anchor_close_enough() then
                 R.grab()
                 return
@@ -125,5 +131,4 @@ simulation this kind of situation do not occur.
 
 ## Improvements
 
-A possible improvement would be adding logic for object avoidance
-
+A possbile improvemente would be to implement some kind of calculation of the absolute positioning of the robot.
