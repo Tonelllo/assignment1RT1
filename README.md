@@ -9,7 +9,6 @@
     + [Possible improvements](#possible-improvements)
     + [Why they have not been implemented](#why-they-have-not-been-implemented)
   * [Pseudocode](#pseudocode)
-  * [Improvements](#improvements)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -56,6 +55,13 @@ The robot would not be able to see the object in front because no logic for it
 was developed. The end result would be:
 ![caseError](./img/caseError.png?raw=true)
 
+Other possible improvements would be adding some sort of positioning based on 
+the tokens present in the board. Another improvement would be to add some 
+logic for dealing with the edge case of not beeing able to see the anchor
+or new tokens during the search phase. 
+More in particular the problem is that if the robot is not able to find the anchor
+or a new token during the search phase then it will be stuck in this phase.
+
 
 ### Why they have not been implemented
 
@@ -71,6 +77,11 @@ No simple solution to this problem with the data available has been found so
 instead of producing a partial solution that would have worked only for
 particular cases the problem has been ignored seeing that in the proposed
 simulation this kind of situation do not occur.
+
+The problem of not beeing able to see the anchor in the search phase has not been
+implemented for the lack of the possibility of testing it in this scenario. 
+This means that with this scenario this situation didn't occour so there was 
+no possibility to test the effectiveness of a possible solution.
 
 ### object_avoidance branch
 To prove the point that the solution presented in the previous paragraph would
@@ -118,9 +129,4 @@ general possible.
 ```
 
 ## Improvements
-
-A possible improvement would be adding some sort of positioning based on 
-the tokens present in the board. Another improvement would be to add some 
-logic for dealing with the edge case of not beeing able to see the anchor
-or neww tokens during the search phase.
 
