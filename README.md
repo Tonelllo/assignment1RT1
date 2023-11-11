@@ -112,9 +112,13 @@ general possible.
 
 ## Pseudocode
 ```lua
-    function take_token(id)
+    function take_token()
+        id = search_for_token_to_pick_up()
         while true do
             drive_towards_token(id);
+            if token_is_approaching() then
+               slow_down()
+            end
             if token_close_enough() then
                 R.grab()
                 return
@@ -125,6 +129,9 @@ general possible.
     function go_to_anchor()
         while true do
             drive_towards_anchor()
+            if anchor_is_approaching()
+                slow_down()
+            end
             if anchor_close_enough() then
                 R.grab()
                 return
@@ -134,13 +141,22 @@ general possible.
             end
         end
     end
-    
-    anchor = set_anchor()
-    while true do
-        take_token()
-        go_to_anchor()
-        if finished then
-            exit(0)
+
+    function set_anchor()
+        if no_token_is_visible() or token_too_far() then
+            turn()
+        else
+            R.anchor = visible_token()
+    end
+
+    function main()
+        R.anchor = set_anchor()
+        while true do
+            take_token()
+            go_to_anchor()
+            if finished then
+                exit(0)
+            end
         end
     end
 ```
