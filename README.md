@@ -2,7 +2,7 @@
 # Table of Contents
 - [Table of Contents](#table-of-contents)
 - [Research Track Assignment 1](#research-track-assignment-1)
-  * [How to run code](#how-to-run-code)
+  * [How to run the code](#how-to-run-the-code)
   * [What does this code do?](#what-does-this-code-do)
     + [Objective](#objective)
   * [Solution implemented](#solution-implemented)
@@ -20,6 +20,7 @@
 To run this code python3 is needed because it was developed starting from the
 assignment23_python3 branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) github repo:
 <https://github.com/CarmineD8/python_simulator/tree/assignment23_python3>
+To run the simulation is necessary to navigate inside the robot-sim directory of the cloned repository and then execute the following command:
 
     python3 run.py assignment.py
 
@@ -28,7 +29,8 @@ assignment23_python3 branch of [@CarmineD8](https://github.com/CarmineD8) [pytho
 
 The code contained in this repo was written for the first assignment of 
 Research Track 1 of Robotics Engineering course of University of Genova.
-The purpose was to make us familiarize with python3.
+The purpose was to make us familiarize with python3 and basic control schemes for 
+controlling a simple turtle-bot.
 
 
 ### Objective
@@ -43,7 +45,20 @@ each other.
 The general idea behind the script is to immediately select an anchor token to
 which bring all the other tokens. In the script there is also a logic to face the
 edge case when the anchor is not seen by the robot because hidden by other
-tokens that have already been set. 
+tokens that have already been set. **NOTE** that this is done only when the robot is
+moving towards a token. If the anchor cannot be spotted during the search phase then
+nothing will work. From the testing that has been done the anchor will always by detected,
+at least in this configuration, during the search phase. This is maybe due to the fact that
+rotating the robot changes its viewpoint allowing to see the anchor even if it's not completely
+obstructed by other tokens.
+
+The solution implemented aims to be the most general possible, meaning that should work on most of the
+cases that the robot will face. for this reason no searching for the center of the board or static 
+assignment of tokens as anchors has been implemented. The idea is that everything should be as 
+dynamic and fast as possible. Another objective of the proposed solution is that the robot should 
+set the tokens in the least time possible so the driving movements are at max speed and the rotation
+is at the maximum speed that was allowed without causing errors. To not overshoot targets some slow down
+logic while approaching the targets has been implemented.
 
 
 ### Possible improvements
@@ -51,7 +66,7 @@ tokens that have already been set.
 An element which is missing from the script is object avoidance. With this I
 mean that if presented with this situation:
 ![caseBase](./img/caseBase.png?raw=true)
-The robot would not be able to see the object in front because no logic for it
+The robot would not be able to avoid the object in front because no logic for it
 was developed. The end result would be:
 ![caseError](./img/caseError.png?raw=true)
 
@@ -65,8 +80,9 @@ or a new token during the search phase then it will be stuck in this phase.
 
 ### Why they have not been implemented
 
-Now it could be said that a simple solution would have been to make the robot
-turn $90^{\circ}$ degrees to the left for example. This would have been only a
+For object avoidance it could be said that a simple solution would have been to make the robot
+turn $90^{\circ}$ degrees to the left for example, go straight for a bit and then turn again to the right.
+This would have been only a
 partial solution because for example in the following situation the robot would
 run into a wall forever finding in front of itself always a extraneous token.
 The same goes for implementing a rotation to the right.
@@ -84,17 +100,18 @@ This means that with this scenario this situation didn't occour so there was
 no possibility to test the effectiveness of a possible solution.
 
 ### object_avoidance branch
-To prove the point that the solution presented in the previous paragraph would
+To prove the point that the solution presented in the previous paragraph for solving 
+the object avoidance problem would
 have it's own drawbacks it has been implemented in the object_avoidance branch.
-At a certain point during execution the robot would run into a wall while trying to
+At a certain point during execution the robot will run into a wall while trying to
 avoid other tokens. Different solutions could be to turn the other direction or to 
-move the anchor token to the center, but all of these solutions are build for this 
+move the anchor token to the center, but all of these solutions are built for this 
 particular case. The idea behind the proposed solution is that it should be the most 
 general possible.
 
 
 ## Pseudocode
-```
+```lua
     function take_token(id)
         while true do
             drive_towards_token(id);
@@ -119,7 +136,7 @@ general possible.
     end
     
     anchor = set_anchor()
-    while True do
+    while true do
         take_token()
         go_to_anchor()
         if finished then
@@ -127,6 +144,3 @@ general possible.
         end
     end
 ```
-
-## Improvements
-
