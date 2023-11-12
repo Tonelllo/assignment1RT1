@@ -18,7 +18,7 @@
 ## How to run the code
 
 To run this code python3 is needed because it was developed starting from the
-assignment23_python3 branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) github repo:
+assignment23_python3 branch of [@CarmineD8](https://github.com/CarmineD8) [python_simulator](https://github.com/CarmineD8/python_simulator/) GitHub repo:
 <https://github.com/CarmineD8/python_simulator/tree/assignment23_python3>
 To run the simulation is necessary to navigate inside the robot-sim directory of the cloned repository and then execute the following command:
 
@@ -45,18 +45,18 @@ each other.
 The general idea behind the script is to immediately select an anchor token to
 which bring all the other tokens. In the script there is also a logic to face the
 edge case when the anchor is not seen by the robot because hidden by other
-tokens that have already been set. **NOTE** that this is done only when the robot is
+tokens that have already been set.<br> **NOTE** that this is done only when the robot is
 moving towards a token. If the anchor cannot be spotted during the search phase then
-nothing will work. From the testing that has been done the anchor will always by detected,
+nothing will work. From the testing that has been done the anchor will always be detected,
 at least in this configuration, during the search phase. This is maybe due to the fact that
 rotating the robot changes its viewpoint allowing to see the anchor even if it's not completely
 obstructed by other tokens.
 
 The solution implemented aims to be the most general possible, meaning that should work on most of the
-cases that the robot will face. for this reason no searching for the center of the board or static 
+cases that the robot will face. For this reason no searching for the center of the board or static 
 assignment of tokens as anchors has been implemented. The idea is that everything should be as 
 dynamic and fast as possible. Another objective of the proposed solution is that the robot should 
-set the tokens in the least time possible so the driving movements are at max speed and the rotation
+set the tokens in the least time possible, so the driving movements are at max speed and the rotation
 is at the maximum speed that was allowed without causing errors. To not overshoot targets some slow down
 logic while approaching the targets has been implemented.
 
@@ -72,7 +72,7 @@ was developed. The end result would be:
 
 Other possible improvements would be adding some sort of positioning based on 
 the tokens present in the board. Another improvement would be to add some 
-logic for dealing with the edge case of not beeing able to see the anchor
+logic for dealing with the edge case of not being able to see the anchor
 or new tokens during the search phase. 
 More in particular the problem is that if the robot is not able to find the anchor
 or a new token during the search phase then it will be stuck in this phase.
@@ -84,7 +84,7 @@ For object avoidance it could be said that a simple solution would have been to 
 turn $90^{\circ}$ degrees to the left for example, go straight for a bit and then turn again to the right.
 This would have been only a
 partial solution because for example in the following situation the robot would
-run into a wall forever finding in front of itself always a extraneous token.
+run into a wall forever finding in front of itself always an extraneous token.
 The same goes for implementing a rotation to the right.
 
 ![solCase](./img/caseSol.png?raw=true)
@@ -94,15 +94,15 @@ instead of producing a partial solution that would have worked only for
 particular cases the problem has been ignored seeing that in the proposed
 simulation this kind of situation do not occur.
 
-The problem of not beeing able to see the anchor in the search phase has not been
+The problem of not being able to see the anchor in the search phase has not been
 implemented for the lack of the possibility of testing it in this scenario. 
-This means that with this scenario this situation didn't occour so there was 
-no possibility to test the effectiveness of a possible solution.
+This means that with this scenario this situation didn't occur, so there was 
+no opportunity to test the effectiveness of a possible solution.
 
 ### object_avoidance branch
 To prove the point that the solution presented in the previous paragraph for solving 
 the object avoidance problem would
-have it's own drawbacks it has been implemented in the object_avoidance branch.
+have its own drawbacks it has been implemented in the object_avoidance branch.
 At a certain point during execution the robot will run into a wall while trying to
 avoid other tokens. Different solutions could be to turn the other direction or to 
 move the anchor token to the center, but all of these solutions are built for this 
